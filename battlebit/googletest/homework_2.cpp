@@ -1,9 +1,33 @@
 #include "gtest/gtest.h"
 
+
+
 char * print_binary_representation(unsigned int i, char *buffer){
+
+    //start i at 31 make it unsigned
+    // decrement to 0
+    // start with the value one
+    // shift that value into the position that we're looking at
+    // i have one i shift it i inpect one bit then i mask using the & all the other bits
+    // fill out remaining 32 bits, 1 or 0 depending on the value in the number i
     buffer[0] = '0';
     buffer[1] = 'b';
-    // fill out remaining 32 bits, 1 or 0 depending on the value in the number i
+    for(int j = 32; j >= 0; j--) {
+        int math = 3 +(31-j);
+        unsigned int mask;
+        unsigned int result = i & mask;
+        mask = 30u << j;
+
+        if (result) {
+            buffer[math] = '1';
+            printf("yep that bit was 1\n");
+        } else {
+            buffer[math] = '0';
+            printf("that was not a 1\n");
+        }
+
+    }
+
     return buffer;
 }
 
@@ -37,19 +61,21 @@ struct Person {
     int age;
 };
 
-void set_my_age(struct Person p) {
-    p.age = 44;
+int set_my_age(struct Person *p) {
+    struct Person age;
+    (*p).age = 30;
+    return (*p).age;
 }
 
 int get_my_age() {
     struct Person me;
-    me.name = "Carson";
-    set_my_age(me);
+    me.name = "Justin";
+    set_my_age(&me);
     return me.age;
 }
 
 TEST(set_my_age, works) {
-    EXPECT_EQ(44, get_my_age());
+    EXPECT_EQ(30, get_my_age());
 }
 
 
