@@ -12,11 +12,12 @@ char * print_binary_representation(unsigned int i, char *buffer){
     // fill out remaining 32 bits, 1 or 0 depending on the value in the number i
     buffer[0] = '0';
     buffer[1] = 'b';
-    for(int j = 32; j >= 0; j--) {
-        int math = 3 +(31-j);
+    for(int j = 31; j >= 0; j--) {
+        int math = 2 +(31-j);
         unsigned int mask;
+        mask = 1u << j;
         unsigned int result = i & mask;
-        mask = 30u << j;
+
 
         if (result) {
             buffer[math] = '1';
