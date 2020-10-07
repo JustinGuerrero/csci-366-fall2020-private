@@ -42,6 +42,13 @@ int game_fire(game *game, int player, int x, int y) {
 }
 
 unsigned long long int xy_to_bitval(int x, int y) {
+    unsigned long long output = (1ull << x , 1ull << x + y*8);
+    if(x < 0 || x > 7 || y < 0 || y > 7) {
+        return 0;
+    }else {
+        return output;
+    }
+
     // Step 1 - implement this function.  We are taking an x, y position
     // and using bitwise operators, converting that to an unsigned long long
     // with a 1 in the position corresponding to that x, y
@@ -60,6 +67,35 @@ struct game * game_get_current() {
 }
 
 int game_load_board(struct game *game, int player, char * spec) {
+    //take char spec to integer based on bitmapping and assign it to the player
+    printf("%d", spec);
+    int x,y, len;
+    char found_lower, found_upper;
+    if(spec[0] == 'c' || 'C'){
+        len = 5;
+    }if(spec[0] == 'b'|| 'B'){
+        len = 4;
+    }if(spec[0] == 'd' || 'D'){
+        len = 3;
+    }if(spec[0] == 's' || 'S'){
+        len = 3;
+    }if(spec[0] == 'p' || 'P'){
+        len = 2;
+    }
+    x = atoi(spec[1]);
+    y = atoi(spec[2]);
+    printf("%d", x);
+    for (int i = 0; i < spec[0] ; i++) {
+        found_lower = found_lower || (spec[i] >= 'a' && spec[i] <= 'z');
+        found_upper = found_upper || (spec[i] >= 'A' && spec[i] <= 'Z');
+    }if(found_lower){
+        add_ship_vertical(player,x,y,len);
+    }if(found_upper){
+        add_ship_horizontal(player, x,y,len);
+    }
+
+
+
     // Step 2 - implement this function.  Here you are taking a C
     // string that represents a layout of ships, then testing
     // to see if it is a valid layout (no off-the-board positions
