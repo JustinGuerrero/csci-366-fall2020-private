@@ -71,29 +71,45 @@ int game_load_board(struct game *game, int player, char * spec) {
     printf("%d", spec);
     int x,y, len;
     char found_lower, found_upper;
-    if(spec[0] == 'c' || 'C'){
-        len = 5;
-    }if(spec[0] == 'b'|| 'B'){
-        len = 4;
-    }if(spec[0] == 'd' || 'D'){
-        len = 3;
-    }if(spec[0] == 's' || 'S'){
-        len = 3;
-    }if(spec[0] == 'p' || 'P'){
-        len = 2;
-    }
-    x = atoi(spec[1]);
-    y = atoi(spec[2]);
+    struct game player1;
+    struct game player2;
+    x = spec[1] - '0';
+    y = spec[2] - '0';
     printf("%d", x);
-    for (int i = 0; i < spec[0] ; i++) {
+
+    for (int i = 0; i < spec[0]; i++) {
+        if (spec[i] == 'c' || spec[i] == 'C') {
+            len = 5;
+        }
+        if (spec[i] == 'b' || spec[i] == 'B') {
+            len = 4;
+        }
+        if (spec[i] == 'd' || spec[i] == 'D') {
+            len = 3;
+        }
+        if (spec[0] == 's' || spec[i] == 'S') {
+            len = 3;
+        }
+        if (spec[0] == 'p' || spec[i] == 'P') {
+            len = 2;
+        }
         found_lower = found_lower || (spec[i] >= 'a' && spec[i] <= 'z');
         found_upper = found_upper || (spec[i] >= 'A' && spec[i] <= 'Z');
-    }if(found_lower){
-        add_ship_vertical(player,x,y,len);
-    }if(found_upper){
-        add_ship_horizontal(player, x,y,len);
-    }
+        if (found_lower) {
+            // need to pass apointer to player sturct
+            add_ship_vertical(&game->players[player] ,x, y, len);
+            return 1;
+        }
+        if (found_upper) {
+            add_ship_horizontal(&game->players[player], x, y, len);
+            return 1;
+        }
 
+        else{
+            printf("ERROR: Did not find appropriate string");
+            return -1;
+        }
+    }
 
 
     // Step 2 - implement this function.  Here you are taking a C
@@ -109,6 +125,13 @@ int game_load_board(struct game *game, int player, char * spec) {
 }
 
 int add_ship_horizontal(player_info *player, int x, int y, int length) {
+
+    if(x > 8 || x < 0){
+        printf((const char *) stderr, "Error, that move is invalid");
+    }
+    if(y > 8 || y < 0){
+        printf((const char *) stderr, "Error, that move is invalid");
+    }
     // implement this as part of Step 2
     // returns 1 if the ship can be added, -1 if not
     // hint: this can be defined recursively
