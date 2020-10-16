@@ -4,6 +4,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <memory.h>
 #include "game.h"
 
 // STEP 10 - Synchronization: the GAME structure will be accessed by both players interacting
@@ -68,47 +69,53 @@ struct game * game_get_current() {
 
 int game_load_board(struct game *game, int player, char * spec) {
     //take char spec to integer based on bitmapping and assign it to the player
-    printf("%d", spec);
     int x,y, len;
     char found_lower, found_upper;
-    struct game player1;
-    struct game player2;
-    x = spec[1] - '0';
-    y = spec[2] - '0';
-    printf("%d", x);
+    if(spec == NULL){
+        return -1;
+    }
+        x = spec[1] - '0';
+        y = spec[2] - '0';
+        if(strlen(spec) == 15) {
+            for (int i = 0; i < 15; i = i+3) {
+                x = spec[i + 1] - '0';
+                y = spec[i + 2] - '0';
+                if (spec[i] == 'c' || spec[i] == 'C') {
+                    len = 5;
+                }
+                if (spec[i] == 'b' || spec[i] == 'B') {
+                    len = 4;
+                }
+                if (spec[i] == 'd' || spec[i] == 'D') {
+                    len = 3;
+                }
+                if (spec[0] == 's' || spec[i] == 'S') {
+                    len = 3;
+                }
+                if (spec[0] == 'p' || spec[i] == 'P') {
+                    len = 2;
+                }
+                found_lower = (spec[i] >= 'a' && spec[i] <= 'z');
+                if (found_lower) {
 
-    for (int i = 0; i < spec[0]; i++) {
-        if (spec[i] == 'c' || spec[i] == 'C') {
-            len = 5;
-        }
-        if (spec[i] == 'b' || spec[i] == 'B') {
-            len = 4;
-        }
-        if (spec[i] == 'd' || spec[i] == 'D') {
-            len = 3;
-        }
-        if (spec[0] == 's' || spec[i] == 'S') {
-            len = 3;
-        }
-        if (spec[0] == 'p' || spec[i] == 'P') {
-            len = 2;
-        }
-        found_lower = found_lower || (spec[i] >= 'a' && spec[i] <= 'z');
-        found_upper = found_upper || (spec[i] >= 'A' && spec[i] <= 'Z');
-        if (found_lower) {
-            // need to pass apointer to player sturct
-            add_ship_vertical(&game->players[player] ,x, y, len);
-            return 1;
-        }
-        if (found_upper) {
-            add_ship_horizontal(&game->players[player], x, y, len);
-            return 1;
-        }
+                    // need to pass apointer to player sturct
+                    int passed = add_ship_vertical(&game->players[player], x, y, len);
+                    if (passed == -1) {
+                        return -1;
+                    }
+                } else {
+                    int passed = add_ship_horizontal(&game->players[player], x, y, len);
+                    if (passed == -1) {
+                        return -1;
+                    }
 
+                }
+            }
+        }
         else{
-            printf("ERROR: Did not find appropriate string");
             return -1;
         }
+        return -1;
     }
 
 
@@ -122,22 +129,55 @@ int game_load_board(struct game *game, int player, char * spec) {
     // slot and return 1
     //
     // if it is invalid, you should return -1
-}
+
 
 int add_ship_horizontal(player_info *player, int x, int y, int length) {
+    unsigned long long mask = xy_to_bitval(x,y);
+    if(length !=0) {
+        if (x > 7 || x < 0) {
+            if (y > 7 || y < 0) {
+                return -1;
+            }
+            return -1;
+        }
+    }
+    if(length == 0){
+        return 1;
+    }
+    if (player->ships & mask){
+        return -1;
+    }
+    player->ships = player->ships | mask;
+    ++x;
+    --length;
+    return add_ship_horizontal(player, x, y, length);
 
-    if(x > 8 || x < 0){
-        printf((const char *) stderr, "Error, that move is invalid");
-    }
-    if(y > 8 || y < 0){
-        printf((const char *) stderr, "Error, that move is invalid");
-    }
     // implement this as part of Step 2
     // returns 1 if the ship can be added, -1 if not
     // hint: this can be defined recursively
 }
 
 int add_ship_vertical(player_info *player, int x, int y, int length) {
+    unsigned long long mask = xy_to_bitval(x,y);
+    if(length !=0) {
+        if (y > 7 || y < 0) {
+            if (x > 7 || x < 0) {
+                return -1;
+            }
+            return -1;
+        }
+    }
+    if(length == 0){
+        return 1;
+    }
+    if (player->ships & mask){
+        return -1;
+    }
+    player->ships = player->ships | mask;
+    ++y;
+    --length;
+    return add_ship_vertical(player, x, y, length);
+
     // implement this as part of Step 2
     // returns 1 if the ship can be added, -1 if not
     // hint: this can be defined recursively

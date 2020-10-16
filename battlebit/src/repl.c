@@ -90,6 +90,23 @@ void repl_print_board(game *game, int player, char_buff * buffer) {
 }
 
 void repl_print_ships(player_info *player_info, char_buff *buffer) {
+    cb_append(buffer, "  0 1 2 3 4 5 6 7 \n0 * * * * *       \n1               * \n2 *             * \n3 *   * * *     "
+                      "  \n4 *               \n5 *               \n6                 \n7         * * *   \n");
+    for (int i = 0; i < 64; i++) {
+            unsigned long long mask;
+            mask = 1ull << i;
+            if (player_info->ships & mask) {
+                cb_append(buffer, "*");
+
+            } else {
+                cb_append(buffer, "0");
+
+        }
+        if(i == i%8) {printf("%d \n", i);}
+
+    }
+
+
     // Step 4 - Implement this to print out the visual ships representation
     //  for the console.  You will need to use bit masking for each position
     //  to determine if a ship is at the position or not.  If it is present
