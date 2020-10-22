@@ -90,10 +90,10 @@ int game_load_board(struct game *game, int player, char * spec) {
                 if (spec[i] == 'd' || spec[i] == 'D') {
                     len = 3;
                 }
-                if (spec[0] == 's' || spec[i] == 'S') {
+                if (spec[i] == 's' || spec[i] == 'S') {
                     len = 3;
                 }
-                if (spec[0] == 'p' || spec[i] == 'P') {
+                if (spec[i] == 'p' || spec[i] == 'P') {
                     len = 2;
                 }
                 found_lower = (spec[i] >= 'a' && spec[i] <= 'z');
@@ -116,7 +116,7 @@ int game_load_board(struct game *game, int player, char * spec) {
         else{
             return -1;
         }
-        return -1;
+        return 1;
     }
 
 
