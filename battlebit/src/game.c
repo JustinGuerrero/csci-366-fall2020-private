@@ -30,6 +30,8 @@ void game_init_player_info(player_info *player_info) {
 }
 
 int game_fire(game *game, int player, int x, int y) {
+
+    int opponent = (player + 1) % 2;
     // Step 5 - This is the crux of the game.  You are going to take a shot from the given player and
     // update all the bit values that store our game state.
     //
@@ -50,17 +52,6 @@ unsigned long long int xy_to_bitval(int x, int y) {
         return output;
     }
 
-    // Step 1 - implement this function.  We are taking an x, y position
-    // and using bitwise operators, converting that to an unsigned long long
-    // with a 1 in the position corresponding to that x, y
-    //
-    // x:0, y:0 == 0b00000...0001 (the one is in the first position)
-    // x:1, y: 0 == 0b00000...10 (the one is in the second position)
-    // ....
-    // x:0, y: 1 == 0b100000000 (the one is in the eighth position)
-    //
-    // you will need to use bitwise operators and some math to produce the right
-    // value.
     return 1ull;
 }
 
@@ -120,18 +111,6 @@ int game_load_board(struct game *game, int player, char * spec) {
     }
 
 
-    // Step 2 - implement this function.  Here you are taking a C
-    // string that represents a layout of ships, then testing
-    // to see if it is a valid layout (no off-the-board positions
-    // and no overlapping ships)
-    //
-
-    // if it is valid, you should write the corresponding unsigned
-    // long long value into the Game->players[player].ships data
-    // slot and return 1
-    //
-    // if it is invalid, you should return -1
-
 
 int add_ship_horizontal(player_info *player, int x, int y, int length) {
     unsigned long long mask = xy_to_bitval(x,y);
@@ -154,9 +133,6 @@ int add_ship_horizontal(player_info *player, int x, int y, int length) {
     --length;
     return add_ship_horizontal(player, x, y, length);
 
-    // implement this as part of Step 2
-    // returns 1 if the ship can be added, -1 if not
-    // hint: this can be defined recursively
 }
 
 int add_ship_vertical(player_info *player, int x, int y, int length) {
@@ -180,7 +156,38 @@ int add_ship_vertical(player_info *player, int x, int y, int length) {
     --length;
     return add_ship_vertical(player, x, y, length);
 
+}
+
+/**
+ * INSTRUCTIONS
+ *
+    // Step 1 - implement this function.  We are taking an x, y position
+    // and using bitwise operators, converting that to an unsigned long long
+    // with a 1 in the position corresponding to that x, y
+    //
+    // x:0, y:0 == 0b00000...0001 (the one is in the first position)
+    // x:1, y: 0 == 0b00000...10 (the one is in the second position)
+    // ....
+    // x:0, y: 1 == 0b100000000 (the one is in the eighth position)
+    //
+    // you will need to use bitwise operators and some math to produce the right
+    // value.
+
+    // Step 2 - implement this function.  Here you are taking a C
+    // string that represents a layout of ships, then testing
+    // to see if it is a valid layout (no off-the-board positions
+    // and no overlapping ships)
+    //
+
+    // if it is valid, you should write the corresponding unsigned
+    // long long value into the Game->players[player].ships data
+    // slot and return 1
+    //
+    // if it is invalid, you should return -1
+
     // implement this as part of Step 2
     // returns 1 if the ship can be added, -1 if not
     // hint: this can be defined recursively
-}
+
+
+**/

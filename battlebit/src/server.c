@@ -54,6 +54,8 @@ void server_broadcast(char_buff *msg) {
 
 int run_server() {
 
+
+
     listen(socket_desc , 3);
 
     //Accept and incoming connection

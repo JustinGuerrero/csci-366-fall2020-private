@@ -93,30 +93,35 @@ void repl_print_board(game *game, int player, char_buff * buffer) {
 }
 
 void repl_print_ships(player_info *player_info, char_buff *buffer) {
-    cb_append(buffer, "  0 1 2 3 4 5 6 7 \n0       \n1               * \n2 *             * \n3 *   * * *     "
-                      "  \n4 *               \n5                \n6                 \n7         * * *   \n");
+    cb_append(buffer, "  0 1 2 3 4 5 6 7 \n");
     int k;
     unsigned long long mask;
     mask = 1ull << k;
 
-    for (int i = 0; i < 8; i++) {
-        for (int j = 0; j < 8; ++j) {
-            xy_to_bitval(j, i);
-            if (player_info->ships & mask) {
+    for (int row = 0; row < 8; row++) {
+        cb_append_int(buffer, row);
+        cb_append(buffer, " ");
+        for (int col = 0; col < 8; col++) {
+            mask = xy_to_bitval(col, row);
+            if (player_info->ships & mask)
+            {
                 cb_append(buffer, "* ");
-            } else {
+            }
+            else
+            {
                 cb_append(buffer, "  ");
             }
         }
-        if (i == i % 8) {
-            printf("%d \n", i);
-        }
+        cb_append(buffer, "\n");
     }
 }
 // Step 4 - Implement this to print out the visual ships representation
 //  for the console.  You will need to use bit masking for each position
 //  to determine if a ship is at the position or not.  If it is present
 //  you need to print an X.  If not, you need to print a space character ' '
+
+
+
 void repl_print_hits(struct player_info *player_info, struct char_buff *buffer) {
     // Step 6 - Implement this to print out a visual representation of the shots
     // that the player has taken and if they are a hit or not.  You will again need
