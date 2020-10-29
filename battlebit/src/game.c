@@ -30,12 +30,25 @@ void game_init_player_info(player_info *player_info) {
 }
 
 int game_fire(game *game, int player, int x, int y) {
-
+    unsigned long long mask = xy_to_bitval(x,y);
     int opponent = (player + 1) % 2;
+
+    // - see if the shot hits a ship in the opponents ships value
+
+    if(game->players[opponent].ships & mask){
+        game->players[player].hits = game->players[player].hits | mask;
+    }
+    //  - update the players 'shots' value
+    game->players[opponent].shots = game->players[opponent].shots | mask;
+
+    //  - If the opponents ships value is 0
+    if(game->players[opponent].ships == 0){
+        printf("Player %d has won the game!",opponent);
+}
     // Step 5 - This is the crux of the game.  You are going to take a shot from the given player and
     // update all the bit values that store our game state.
     //
-    //  - You will need up update the players 'shots' value
+    //  - You will need to update the players 'shots' value
     //  - you You will need to see if the shot hits a ship in the opponents ships value.  If so, record a hit in the
     //    current players hits field
     //  - If the shot was a hit, you need to flip the ships value to 0 at that position for the opponents ships field
