@@ -1,6 +1,15 @@
         global    find_max
         section   .text
 find_max:
+        mov eax, 1
+        mov ecx, 10
+        L1:
+            call writeint
+            call crlf
+            add eax, 1
+            loop L1
+            call ReadInt
+              invoke ExitProcess,0
         ;; rdi has the array in it
         ;; rsi has the length in it
         mov rax, [rdi] ;; move the first value in the array into rax

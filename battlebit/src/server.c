@@ -13,6 +13,13 @@
 #include<sys/socket.h>
 #include<arpa/inet.h>    //inet_addr
 #include<unistd.h>    //write
+#include<netdb.h>
+#include<netinet/in.h>
+#include<sys/types.h>
+void *connection_handler(void*);
+int socket_desc, client_sock, c;
+struct sockaddr_in server, client;
+pthread_t thread_id;
 
 static game_server *SERVER;
 
@@ -46,6 +53,41 @@ void server_broadcast(char_buff *msg) {
 }
 
 int run_server() {
+
+
+
+    listen(socket_desc , 3);
+
+    //Accept and incoming connection
+    printf("Waiting for incoming connections...\n");
+    c = sizeof(struct sockaddr_in);
+
+    //Accept and incoming connection
+    printf("Waiting for incoming connections...\n");
+    c = sizeof(struct sockaddr_in);
+
+    while( (client_sock = accept(socket_desc, (struct sockaddr *)&client, (socklen_t*)&c)) )
+    {
+        printf("Connection accepted\n");
+
+        if( pthread_create( &SERVER->server_thread , NULL ,  handle_client_connect , (void*) &client_sock) < 0)
+        {
+            printf("Could not create thread\n");
+            return 1;
+        }
+
+        //Now join the thread , so that we dont terminate before the thread
+        pthread_join( SERVER->player_threads , NULL);
+        printf("Handler assigned\n");
+    }
+
+    if (client_sock < 0)
+    {
+        printf("accept failed\n");
+        return 1;
+    }
+
+
     // STEP 8 - implement the server code to put this on the network.
     // Here you will need to initalize a server socket and wait for incoming connections.
     //
@@ -57,6 +99,34 @@ int run_server() {
 }
 
 int server_start() {
+<<<<<<< HEAD
     // STEP 7 - using a pthread, run the run_server() function asynchronously, so you can still
     // interact with the game via the command line REPL
+=======
+
+
+    //Create server socket
+    socket_desc = socket(AF_INET , SOCK_STREAM , 0);
+    if (socket_desc == -1)
+    {
+        printf("Could not create socket\n");
+        return 0;
+    }
+    printf("Server Socket Created\n");
+
+    //Prepare the sockaddr_in structure
+    server.sin_family = AF_INET;
+    server.sin_addr.s_addr = INADDR_ANY;
+    server.sin_port = htons(8000);
+
+    //Bind the port to the server socket
+    if( bind(socket_desc,(struct sockaddr *)&server , sizeof(server)) < 0)
+    {
+        printf("bind failed\n");
+        return 0;
+    }
+    printf("bind done\n");
+    return 1;
+>>>>>>> 2290a45cbfdbc7a61e9cb5fa9b87071761e6b0fd
 }
+
