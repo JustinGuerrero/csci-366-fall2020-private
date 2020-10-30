@@ -33,20 +33,27 @@ int game_fire(game *game, int player, int x, int y) {
     unsigned long long mask = xy_to_bitval(x,y);
     int opponent = (player + 1) % 2;
 
+    //  - update the players 'shots' value
+    game->players[opponent].shots = game->players[opponent].shots | mask;
+
     // - see if the shot hits a ship in the opponents ships value
 
     if(game->players[opponent].ships & mask){
         game->players[player].hits = game->players[player].hits | mask;
+        game->players[opponent].ships = game->players[opponent].ships &~ mask; // flip this bitmask after hits then & with existing ships
+        //  game->players[opponent].ships = game->players[opponent].ships & mask;// now there is a 0 and the 0 combined with the 1 and flips the ships bit to zero
+
     }
-    //  - update the players 'shots' value
-    game->players[opponent].shots = game->players[opponent].shots | mask;
+    else{return 0;}
+
 
     //  - If the opponents ships value is 0
     if(game->players[opponent].ships == 0){
         printf("Player %d has won the game!",opponent);
-}
-    // Step 5 - This is the crux of the game.  You are going to take a shot from the given player and
-    // update all the bit values that store our game state.
+        return 1;
+    }
+    //    Step 5 - This is the crux of the game.  You are going to take a shot from the given player and
+    //    update all the bit values that store our game state.
     //
     //  - You will need to update the players 'shots' value
     //  - you You will need to see if the shot hits a ship in the opponents ships value.  If so, record a hit in the
@@ -55,6 +62,7 @@ int game_fire(game *game, int player, int x, int y) {
     //
     //  If the opponents ships value is 0, they have no remaining ships, and you should set the game state to
     //  PLAYER_1_WINS or PLAYER_2_WINS depending on who won.
+    return 1;
 }
 
 unsigned long long int xy_to_bitval(int x, int y) {
@@ -79,49 +87,49 @@ int game_load_board(struct game *game, int player, char * spec) {
     if(spec == NULL){
         return -1;
     }
-        x = spec[1] - '0';
-        y = spec[2] - '0';
-        if(strlen(spec) == 15) {
-            for (int i = 0; i < 15; i = i+3) {
-                x = spec[i + 1] - '0';
-                y = spec[i + 2] - '0';
-                if (spec[i] == 'c' || spec[i] == 'C') {
-                    len = 5;
-                }
-                if (spec[i] == 'b' || spec[i] == 'B') {
-                    len = 4;
-                }
-                if (spec[i] == 'd' || spec[i] == 'D') {
-                    len = 3;
-                }
-                if (spec[i] == 's' || spec[i] == 'S') {
-                    len = 3;
-                }
-                if (spec[i] == 'p' || spec[i] == 'P') {
-                    len = 2;
-                }
-                found_lower = (spec[i] >= 'a' && spec[i] <= 'z');
-                if (found_lower) {
+    x = spec[1] - '0';
+    y = spec[2] - '0';
+    if(strlen(spec) == 15) {
+        for (int i = 0; i < 15; i = i+3) {
+            x = spec[i + 1] - '0';
+            y = spec[i + 2] - '0';
+            if (spec[i] == 'c' || spec[i] == 'C') {
+                len = 5;
+            }
+            if (spec[i] == 'b' || spec[i] == 'B') {
+                len = 4;
+            }
+            if (spec[i] == 'd' || spec[i] == 'D') {
+                len = 3;
+            }
+            if (spec[i] == 's' || spec[i] == 'S') {
+                len = 3;
+            }
+            if (spec[i] == 'p' || spec[i] == 'P') {
+                len = 2;
+            }
+            found_lower = (spec[i] >= 'a' && spec[i] <= 'z');
+            if (found_lower) {
 
-                    // need to pass apointer to player sturct
-                    int passed = add_ship_vertical(&game->players[player], x, y, len);
-                    if (passed == -1) {
-                        return -1;
-                    }
-                } else {
-                    int passed = add_ship_horizontal(&game->players[player], x, y, len);
-                    if (passed == -1) {
-                        return -1;
-                    }
-
+                // need to pass apointer to player sturct
+                int passed = add_ship_vertical(&game->players[player], x, y, len);
+                if (passed == -1) {
+                    return -1;
                 }
+            } else {
+                int passed = add_ship_horizontal(&game->players[player], x, y, len);
+                if (passed == -1) {
+                    return -1;
+                }
+
             }
         }
-        else{
-            return -1;
-        }
-        return 1;
     }
+    else{
+        return -1;
+    }
+    return 1;
+}
 
 
 
