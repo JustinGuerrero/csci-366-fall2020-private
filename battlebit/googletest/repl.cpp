@@ -54,7 +54,7 @@ TEST(repl_print_hits, print_miss){
     game_init();
     struct game * gameon = game_get_current();
     struct char_buff *buffer = cb_create(2000);
-    //cb_print(buffer);
+    cb_print(buffer);
     char * spec = "C00b02D23S47p71";
     game_load_board(gameon, 0, spec);
     game_load_board(gameon, 1, spec);
