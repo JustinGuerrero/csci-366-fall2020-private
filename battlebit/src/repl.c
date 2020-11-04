@@ -132,7 +132,11 @@ void repl_print_hits(struct player_info *player_info, struct char_buff *buffer) 
         for (int col = 0; col < 8; col++) {
             if (player_info->hits & mask) {
                 cb_append(buffer, "H ");
+<<<<<<< HEAD
             } else if (player_info->shots & mask) {
+=======
+            } else if (player_info->hits & mask) {
+>>>>>>> 8104f36b2eb9ea8ae5917a05301c2aced49fb537
                 cb_append(buffer, "M ");
             } else {
                 cb_append(buffer, "  ");
