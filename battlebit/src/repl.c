@@ -132,11 +132,7 @@ void repl_print_hits(struct player_info *player_info, struct char_buff *buffer) 
         for (int col = 0; col < 8; col++) {
             if (player_info->hits & mask) {
                 cb_append(buffer, "H ");
-<<<<<<< HEAD
             } else if (player_info->shots & mask) {
-=======
-            } else if (player_info->hits & mask) {
->>>>>>> 8104f36b2eb9ea8ae5917a05301c2aced49fb537
                 cb_append(buffer, "M ");
             } else {
                 cb_append(buffer, "  ");
@@ -146,10 +142,17 @@ void repl_print_hits(struct player_info *player_info, struct char_buff *buffer) 
         cb_append(buffer, "\n");
     }
 }
-    // Step 6 - Implement this to print out a visual representation of the shots
-    // that the player has taken and if they are a hit or not.  You will again need
-    // to use bit-masking, but this time you will need to consult two values: both
-    // hits and shots values in the players game struct.  If a shot was fired at
-    // a given spot and it was a hit, print 'H', if it was a miss, print 'M'.  If
-    // no shot was taken at a position, print a space character ' '
+// Step 6 - Implement this to print out a visual representation of the shots
+// that the player has taken and if they are a hit or not.  You will again need
+// to use bit-masking, but this time you will need to consult two values: both
+// hits and shots values in the players game struct.  If a shot was fired at
+// a given spot and it was a hit, print 'H', if it was a miss, print 'M'.  If
+// no shot was taken at a position, print a space character ' '
+
+
+
+
+
+
+
 
