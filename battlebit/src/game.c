@@ -44,24 +44,17 @@ int game_fire(game *game, int player, int x, int y) {
         //  game->players[opponent].ships = game->players[opponent].ships & mask;// now there is a 0 and the 0 combined with the 1 and flips the ships bit to zero
 
     }
-    else{return 0;}
+    else{
+        return 0;
+    }
 
 
     //  - If the opponents ships value is 0
     if(game->players[opponent].ships == 0){
-        printf("Player %d has won the game!",opponent);
+        printf("Player %d has won the game!",game->players[opponent]);
         return 1;
     }
-    //    Step 5 - This is the crux of the game.  You are going to take a shot from the given player and
-    //    update all the bit values that store our game state.
-    //
-    //  - You will need to update the players 'shots' value
-    //  - you You will need to see if the shot hits a ship in the opponents ships value.  If so, record a hit in the
-    //    current players hits field
-    //  - If the shot was a hit, you need to flip the ships value to 0 at that position for the opponents ships field
-    //
-    //  If the opponents ships value is 0, they have no remaining ships, and you should set the game state to
-    //  PLAYER_1_WINS or PLAYER_2_WINS depending on who won.
+
     return 1;
 }
 
@@ -82,13 +75,15 @@ struct game * game_get_current() {
 
 int game_load_board(struct game *game, int player, char * spec) {
     //take char spec to integer based on bitmapping and assign it to the player
+    int opponent = (player + 1) % 2;
+    game_init_player_info(&GAME->players[opponent]);
     int x,y, len;
     char found_lower, found_upper;
     if(spec == NULL){
         return -1;
     }
-    x = spec[1] - '0';
-    y = spec[2] - '0';
+//    x = spec[1] - '0';
+//    y = spec[2] - '0';
     if(strlen(spec) == 15) {
         for (int i = 0; i < 15; i = i+3) {
             x = spec[i + 1] - '0';
@@ -209,6 +204,15 @@ int add_ship_vertical(player_info *player, int x, int y, int length) {
     // implement this as part of Step 2
     // returns 1 if the ship can be added, -1 if not
     // hint: this can be defined recursively
-
+    //    Step 5 - This is the crux of the game.  You are going to take a shot from the given player and
+    //    update all the bit values that store our game state.
+    //
+    //  - You will need to update the players 'shots' value
+    //  - you You will need to see if the shot hits a ship in the opponents ships value.  If so, record a hit in the
+    //    current players hits field
+    //  - If the shot was a hit, you need to flip the ships value to 0 at that position for the opponents ships field
+    //
+    //  If the opponents ships value is 0, they have no remaining ships, and you should set the game state to
+    //  PLAYER_1_WINS or PLAYER_2_WINS depending on who won.
 
 **/

@@ -24,11 +24,11 @@ pthread_t thread_id;
 static game_server *SERVER;
 
 void init_server() {
-//    if (SERVER == NULL) {
-//        SERVER = calloc(1, sizeof(struct game_server));
-//    } else {
-//        printf("Server already started");
-//    }
+    if (SERVER == NULL) {
+        SERVER = calloc(1, sizeof(struct game_server));
+    } else {
+        printf("Server already started");
+    }
 }
 
 int handle_client_connect(int player) {
@@ -82,6 +82,14 @@ int run_server() {
     } else {
         puts("Connected!\n");
     }
+        while( (client_sock = accept(socket_desc, (struct sockaddr *)&client, (socklen_t*)&c)) ) {
+            printf("Connection accepted\n");
+
+            if (pthread_create(&SERVER->server_thread, NULL, handle_client_connect, (void *) &client_sock) < 0) {
+                printf("Could not create thread\n");
+                return 1;
+            }
+        }
 
     //Send some data
     char * message = "GET / HTTP/1.1\r\n\r\n";
