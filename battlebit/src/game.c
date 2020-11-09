@@ -34,7 +34,7 @@ int game_fire(game *game, int player, int x, int y) {
     int opponent = (player + 1) % 2;
 
     //  - update the players 'shots' value
-    game->players[opponent].shots = game->players[opponent].shots | mask;
+    game->players[player].shots = game->players[player].shots | mask;
 
     // - see if the shot hits a ship in the opponents ships value
 
