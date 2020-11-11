@@ -89,6 +89,9 @@ int run_server() {
                 printf("Could not create thread\n");
                 return 1;
             }
+        //Now join the thread , so that we dont terminate before the thread
+            pthread_join( SERVER->server_thread , NULL);
+            printf("Handler assigned\n");
         }
 
     //Send some data
@@ -155,8 +158,12 @@ int run_server() {
 
 
 int server_start() {
-    // STEP 7 - using a pthread, run the run_server() function asynchronously, so you can still
-    // interact with the game via the command line REPL
+//    init_server();
+//    pthread_create(&SERVER->server_thread, NULL, (void *) run_server, &client_sock);
+//
+//}
+//     STEP 7 - using a pthread, run the run_server() function asynchronously, so you can still
+//     interact with the game via the command line REPL
 
     int server_socket_fd = socket(AF_INET,
                                   SOCK_STREAM,
@@ -237,27 +244,27 @@ int server_start() {
 
         }
     }
-//    //Create server socket
-//    socket_desc = socket(AF_INET , SOCK_STREAM , 0);
-//    if (socket_desc == -1)
-//    {
-//        printf("Could not create socket\n");
-//        return 0;
-//    }
-//    printf("Server Socket Created\n");
-//
-//    //Prepare the sockaddr_in structure
-//    server.sin_family = AF_INET;
-//    server.sin_addr.s_addr = INADDR_ANY;
-//    server.sin_port = htons(8000);
-//
-//    //Bind the port to the server socket
-//    if( bind(socket_desc,(struct sockaddr *)&server , sizeof(server)) < 0)
-//    {
-//        printf("bind failed\n");
-//        return 0;
-//    }
-//    printf("bind done\n");
-//    return 1;
+    //Create server socket
+    socket_desc = socket(AF_INET , SOCK_STREAM , 0);
+    if (socket_desc == -1)
+    {
+        printf("Could not create socket\n");
+        return 0;
+    }
+    printf("Server Socket Created\n");
+
+    //Prepare the sockaddr_in structure
+    server.sin_family = AF_INET;
+    server.sin_addr.s_addr = INADDR_ANY;
+    server.sin_port = htons(8000);
+
+    //Bind the port to the server socket
+    if( bind(socket_desc,(struct sockaddr *)&server , sizeof(server)) < 0)
+    {
+        printf("bind failed\n");
+        return 0;
+    }
+    printf("bind done\n");
+    return 1;
 }
 

@@ -34,6 +34,7 @@ int game_fire(game *game, int player, int x, int y) {
     int opponent = (player + 1) % 2;
 
     //  - update the players 'shots' value
+
     game->players[player].shots = game->players[player].shots | mask;
 
     // - see if the shot hits a ship in the opponents ships value
@@ -51,8 +52,19 @@ int game_fire(game *game, int player, int x, int y) {
 
     //  - If the opponents ships value is 0
     if(game->players[opponent].ships == 0){
-        printf("Player %d has won the game!",game->players[opponent]);
-        return 1;
+        if(player == 0){
+            game->status = PLAYER_0_WINS;
+        }
+        if(player == 1){
+            game->status = PLAYER_1_WINS;
+        }
+    }else{
+        if(player == 0){
+            game->status = PLAYER_1_TURN;
+        }
+        if(player == 1){
+            game->status = PLAYER_0_TURN;
+        }
     }
 
     return 1;
@@ -76,7 +88,6 @@ struct game * game_get_current() {
 int game_load_board(struct game *game, int player, char * spec) {
     //take char spec to integer based on bitmapping and assign it to the player
     int opponent = (player + 1) % 2;
-    game_init_player_info(&GAME->players[opponent]);
     int x,y, len;
     char found_lower, found_upper;
     if(spec == NULL){
@@ -84,6 +95,7 @@ int game_load_board(struct game *game, int player, char * spec) {
     }
 //    x = spec[1] - '0';
 //    y = spec[2] - '0';
+
     if(strlen(spec) == 15) {
         for (int i = 0; i < 15; i = i+3) {
             x = spec[i + 1] - '0';
@@ -119,9 +131,14 @@ int game_load_board(struct game *game, int player, char * spec) {
 
             }
         }
+
     }
     else{
         return -1;
+    }
+    printf("player is %d\n", player);
+    if(game->players[player].ships != 0 && game->players[opponent].ships != 0){
+        game->status = PLAYER_0_TURN;
     }
     return 1;
 }
