@@ -33,14 +33,19 @@ string: Foo
 [ RUN      ] game_fire.empty_game
 [       OK ] game_fire.empty_game (0 ms)
 [ RUN      ] game_fire.hit_fire
-Player -944787280 has won the game![       OK ] game_fire.hit_fire (0 ms)
+player is 0
+[       OK ] game_fire.hit_fire (0 ms)
 [ RUN      ] game_fire.hit_fire2
-Player -944787280 has won the game![       OK ] game_fire.hit_fire2 (0 ms)
+player is 1
+[       OK ] game_fire.hit_fire2 (0 ms)
 [ RUN      ] game_fire.miss_fire
+player is 0
 [       OK ] game_fire.miss_fire (0 ms)
 [ RUN      ] game_fire.miss_fire2
+player is 1
 [       OK ] game_fire.miss_fire2 (0 ms)
 [ RUN      ] game_fire.invalid_fire
+player is 0
 [       OK ] game_fire.invalid_fire (0 ms)
 [----------] 6 tests from game_fire (0 ms total)
 
@@ -62,28 +67,28 @@ Player -944787280 has won the game![       OK ] game_fire.hit_fire2 (0 ms)
 [ RUN      ] game_load_board.empty_spec
 [       OK ] game_load_board.empty_spec (0 ms)
 [ RUN      ] game_load_board.incomplete_spec
-[       OK ] game_load_board.incomplete_spec (1 ms)
+[       OK ] game_load_board.incomplete_spec (0 ms)
 [ RUN      ] game_load_board.valid_spec
+player is 0
 [       OK ] game_load_board.valid_spec (0 ms)
-[----------] 3 tests from game_load_board (1 ms total)
+[----------] 3 tests from game_load_board (0 ms total)
 
 [----------] 1 test from game_status
 [ RUN      ] game_status.is_correct
-/home/carson/Projects/msu/csci-366-fall2020/grading/scripts/repos/justin_guerrero/battlebit/googletest/game.cpp:321: Failure
-Expected equality of these values:
-  PLAYER_0_TURN
-    Which is: 2
-  pGame->status
-    Which is: 0
-[  FAILED  ] game_status.is_correct (0 ms)
+player is 0
+player is 1
+[       OK ] game_status.is_correct (0 ms)
 [----------] 1 test from game_status (0 ms total)
 
 [----------] 2 tests from repl_print_ships
 [ RUN      ] repl_print_ships.print_ships
 size: 2000, append_offset: 0
 string: 
+player is 0
 [       OK ] repl_print_ships.print_ships (0 ms)
 [ RUN      ] repl_print_ships.print_ship_status
+player is 0
+player is 1
 [       OK ] repl_print_ships.print_ship_status (0 ms)
 [----------] 2 tests from repl_print_ships (0 ms total)
 
@@ -91,17 +96,17 @@ string:
 [ RUN      ] repl_print_hits.print_hits
 size: 2000, append_offset: 0
 string: 
+player is 0
+player is 1
 [       OK ] repl_print_hits.print_hits (0 ms)
 [ RUN      ] repl_print_hits.print_miss
 size: 2000, append_offset: 0
 string: 
+player is 0
+player is 1
 [       OK ] repl_print_hits.print_miss (0 ms)
 [----------] 2 tests from repl_print_hits (0 ms total)
 
 [----------] Global test environment tear-down
-[==========] 23 tests from 9 test suites ran. (1 ms total)
-[  PASSED  ] 22 tests.
-[  FAILED  ] 1 test, listed below:
-[  FAILED  ] game_status.is_correct
-
- 1 FAILED TEST
+[==========] 23 tests from 9 test suites ran. (0 ms total)
+[  PASSED  ] 23 tests.
