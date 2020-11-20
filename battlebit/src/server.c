@@ -45,12 +45,12 @@ int handle_client_connect(int player) {
     char_buff *output_buffer = cb_create(2000);
 
     int read_size;
-    int fd = SERVER->player_sockets[player];
+    int playerSocket = SERVER->player_sockets[player];
     cb_append(output_buffer, "\nbattleBit (? for help) > ");
-    cb_write(fd, output_buffer);
+    cb_write(playerSocket, output_buffer);
 
 
-    while ((read_size = recv(fd, raw_buffer, 2000, 0)) > 0) {
+    while ((read_size = recv(playerSocket, raw_buffer, 2000, 0)) > 0) {
         cb_reset(output_buffer);
         cb_reset(input_buffer);
         if (read_size > 0) {
@@ -77,37 +77,35 @@ int handle_client_connect(int player) {
                     cb_append(output_buffer,"exit - quit the server\n");
                     //cb_append(output_buffer, command);
                     //out put it
-                    cb_write(fd, output_buffer);
+                    cb_write(playerSocket, output_buffer);
                 } else if (strcmp(command, "exit") == 0) {
                     cb_append(output_buffer, "Goodbye!\n");
-                    cb_write(fd, output_buffer);
-                    close(fd);
-                } else if (command != NULL) {
-                    cb_append(output_buffer, "Command was : ");
-                    cb_append(output_buffer, command);
-
-                    cb_write(fd, output_buffer);
-                } else if (strcmp(command, "show") == 0) {
-                    repl_print_board(game_get_current(), fd, output_buffer);
-                    cb_write(fd, output_buffer);
+                    cb_write(playerSocket, output_buffer);
+                    close(playerSocket);
+                }else if (strcmp(command, "show") == 0) {
+                    repl_print_board(game_get_current(), playerSocket, output_buffer);
+                    cb_write(playerSocket, output_buffer);
                 } else if (strcmp(command, "reset") == 0) {
                     game_init();
                 } else if (strcmp(command, "load") == 0) {
-                    game_load_board(game_get_current(), fd, arg1);
+                    game_load_board(game_get_current(), playerSocket, arg1);
                 } else if (strcmp(command, "fire") == 0) {
-                    game_fire(game_get_current(), fd, atoi(arg1), atoi(arg2));
+                    game_fire(game_get_current(), playerSocket, atoi(arg1), atoi(arg2));
                 } else if (strcmp(command, "say") == 0) {
-                    server_broadcast(arg1);
+                    char_buff * tmp = cb_create(1000);
+                    cb_append(tmp, arg1);
+                    server_broadcast(tmp);
+                    cb_free(tmp);
                 } else {
                     cb_append(output_buffer,"Unknown Command: ");
                     cb_append(output_buffer, command);
                     cb_append(output_buffer, "\n");
-                    cb_write(fd, output_buffer);
+                    cb_write(playerSocket, output_buffer);
                 }
 
                 cb_reset(output_buffer);
                 cb_append(output_buffer, "\nbattleBut (? for help) > ");
-                cb_write(fd, output_buffer);
+                cb_write(playerSocket, output_buffer);
             }
         }
     }
