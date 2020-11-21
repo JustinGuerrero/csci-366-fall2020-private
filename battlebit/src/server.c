@@ -40,6 +40,7 @@ int handle_client_connect(int player) {
     // be working against network sockets rather than standard out, and you will need
     // to coordinate turns via the game::status field.
 
+
     char raw_buffer[2000];
     char_buff *input_buffer = cb_create(2000);
     char_buff *output_buffer = cb_create(2000);
@@ -83,14 +84,19 @@ int handle_client_connect(int player) {
                     cb_write(playerSocket, output_buffer);
                     close(playerSocket);
                 }else if (strcmp(command, "show") == 0) {
-                    repl_print_board(game_get_current(), playerSocket, output_buffer);
+                    repl_print_board(game_get_current(), player, output_buffer);
                     cb_write(playerSocket, output_buffer);
                 } else if (strcmp(command, "reset") == 0) {
                     game_init();
                 } else if (strcmp(command, "load") == 0) {
-                    game_load_board(game_get_current(), playerSocket, arg1);
+                    game_load_board(game_get_current(), player, arg1);
+                    cb_append(output_buffer, "player");
+                    //cb_append(output_buffer, playerchar);
+                    cb_append(output_buffer, "has loaded the board");
+                    cb_write(playerSocket,output_buffer);
                 } else if (strcmp(command, "fire") == 0) {
-                    game_fire(game_get_current(), playerSocket, atoi(arg1), atoi(arg2));
+                    game_fire(game_get_current(), player, atoi(arg1), atoi(arg2));
+                    cb_write(playerSocket,output_buffer);
                 } else if (strcmp(command, "say") == 0) {
                     char_buff * tmp = cb_create(1000);
                     cb_append(tmp, arg1);
