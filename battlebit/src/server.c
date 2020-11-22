@@ -49,8 +49,6 @@ int handle_client_connect(int player) {
     int playerSocket = SERVER->player_sockets[player];
     cb_append(output_buffer, "\nbattleBit (? for help) > ");
     cb_write(playerSocket, output_buffer);
-
-
     while ((read_size = recv(playerSocket, raw_buffer, 2000, 0)) > 0) {
         cb_reset(output_buffer);
         cb_reset(input_buffer);
@@ -85,18 +83,25 @@ int handle_client_connect(int player) {
                     close(playerSocket);
                 }else if (strcmp(command, "show") == 0) {
                     repl_print_board(game_get_current(), player, output_buffer);
-                    cb_write(playerSocket, output_buffer);
+                    server_broadcast(output_buffer);
                 } else if (strcmp(command, "reset") == 0) {
+                    cb_append(output_buffer, "the game has been reset by player ");
+                    cb_append_int(output_buffer, player);
                     game_init();
+                    server_broadcast(output_buffer);
                 } else if (strcmp(command, "load") == 0) {
                     game_load_board(game_get_current(), player, arg1);
-                    cb_append(output_buffer, "player");
-                    //cb_append(output_buffer, playerchar);
-                    cb_append(output_buffer, "has loaded the board");
-                    cb_write(playerSocket,output_buffer);
+                    cb_append(output_buffer, "You are player ");
+                    cb_append_int(output_buffer, player);
+                    cb_append(output_buffer, " and you have loaded the board");
+                    //cb_write(playerSocket,output_buffer);
+                    server_broadcast(output_buffer);
                 } else if (strcmp(command, "fire") == 0) {
                     game_fire(game_get_current(), player, atoi(arg1), atoi(arg2));
-                    cb_write(playerSocket,output_buffer);
+                    cb_append(output_buffer, "player ");
+                    cb_append_int(output_buffer, player);
+                    cb_append(output_buffer, " has fired");
+                    server_broadcast(output_buffer);
                 } else if (strcmp(command, "say") == 0) {
                     char_buff * tmp = cb_create(1000);
                     cb_append(tmp, arg1);
