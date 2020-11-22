@@ -104,7 +104,7 @@ int handle_client_connect(int player) {
                     server_broadcast(output_buffer);
                 } else if (strcmp(command, "say") == 0) {
                     char_buff * tmp = cb_create(1000);
-                    cb_append(tmp, arg1);
+                    cb_append(tmp, raw_buffer + 4);
                     server_broadcast(tmp);
                     cb_free(tmp);
                 } else {
