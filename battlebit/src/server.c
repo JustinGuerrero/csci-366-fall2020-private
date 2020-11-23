@@ -39,12 +39,12 @@ int handle_client_connect(int player) {
     // This function will end up looking a lot like repl_execute_command, except you will
     // be working against network sockets rather than standard out, and you will need
     // to coordinate turns via the game::status field.
-
-
+    struct game *gameon = game_get_current();
+    unsigned long long hits = gameon->players[player].hits;
     char raw_buffer[2000];
     char_buff *input_buffer = cb_create(2000);
     char_buff *output_buffer = cb_create(2000);
-
+    int opponent = (player +1 ) % 2;
     int read_size;
     int playerSocket = SERVER->player_sockets[player];
     cb_append(output_buffer, "\nbattleBit (? for help) > ");
@@ -83,25 +83,43 @@ int handle_client_connect(int player) {
                     close(playerSocket);
                 }else if (strcmp(command, "show") == 0) {
                     repl_print_board(game_get_current(), player, output_buffer);
-                    server_broadcast(output_buffer);
+                    cb_write(playerSocket, output_buffer);
                 } else if (strcmp(command, "reset") == 0) {
                     cb_append(output_buffer, "the game has been reset by player ");
                     cb_append_int(output_buffer, player);
+                    cb_append(output_buffer, "\n");
                     game_init();
                     server_broadcast(output_buffer);
                 } else if (strcmp(command, "load") == 0) {
                     game_load_board(game_get_current(), player, arg1);
-                    cb_append(output_buffer, "You are player ");
+                    cb_append(output_buffer, "Player ");
                     cb_append_int(output_buffer, player);
-                    cb_append(output_buffer, " and you have loaded the board");
+                    cb_append(output_buffer, " has loaded the board\n");
                     //cb_write(playerSocket,output_buffer);
                     server_broadcast(output_buffer);
                 } else if (strcmp(command, "fire") == 0) {
                     game_fire(game_get_current(), player, atoi(arg1), atoi(arg2));
                     cb_append(output_buffer, "player ");
                     cb_append_int(output_buffer, player);
-                    cb_append(output_buffer, " has fired");
-                    server_broadcast(output_buffer);
+                    cb_append(output_buffer, " has fired at ");
+                    cb_append_int(output_buffer, raw_buffer[4]);
+                    cb_append(output_buffer, " ");
+                    cb_append_int(output_buffer, raw_buffer[5]);
+                   // server_broadcast(output_buffer);
+                    if(gameon->players[player].hits != hits){
+                        cb_append(output_buffer, " and it's a HIT\n");
+                        server_broadcast(output_buffer);
+                        if(gameon->players[opponent].ships == 0){
+                            cb_append(output_buffer, "Player ");
+                            cb_append_int(output_buffer, player);
+                            cb_append(output_buffer, " has won! Game will be restarted. Load to continue or type 'exit' to quit");
+                            server_broadcast(output_buffer);
+                            game_init();
+                        }else{continue;}
+                    }else{
+                        cb_append(output_buffer, " and it's a MISS\n");
+                        server_broadcast(output_buffer);
+                    }
                 } else if (strcmp(command, "say") == 0) {
                     char_buff * tmp = cb_create(1000);
                     cb_append(tmp, raw_buffer + 4);

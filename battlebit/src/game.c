@@ -43,7 +43,6 @@ int game_fire(game *game, int player, int x, int y) {
         game->players[player].hits = game->players[player].hits | mask;
         game->players[opponent].ships = game->players[opponent].ships &~ mask; // flip this bitmask after hits then & with existing ships
         //  game->players[opponent].ships = game->players[opponent].ships & mask;// now there is a 0 and the 0 combined with the 1 and flips the ships bit to zero
-
     }
     else{
         return 0;
