@@ -102,9 +102,9 @@ int handle_client_connect(int player) {
                     cb_append(output_buffer, "player ");
                     cb_append_int(output_buffer, player);
                     cb_append(output_buffer, " has fired at ");
-                    cb_append_int(output_buffer, raw_buffer[4]);
+                    cb_append_int(output_buffer, arg1);
                     cb_append(output_buffer, " ");
-                    cb_append_int(output_buffer, raw_buffer[5]);
+                    cb_append_int(output_buffer, arg2);
                    // server_broadcast(output_buffer);
                     if(gameon->players[player].hits != hits){
                         cb_append(output_buffer, " and it's a HIT\n");
