@@ -102,9 +102,9 @@ int handle_client_connect(int player) {
                     cb_append(output_buffer, "player ");
                     cb_append_int(output_buffer, player);
                     cb_append(output_buffer, " has fired at ");
-                    cb_append_int(output_buffer, arg1);
+                    cb_append_int(output_buffer, atoi(arg1));
                     cb_append(output_buffer, " ");
-                    cb_append_int(output_buffer, arg2);
+                    cb_append_int(output_buffer, atoi(arg2));
                    // server_broadcast(output_buffer);
                     if(gameon->players[player].hits != hits){
                         cb_append(output_buffer, " and it's a HIT\n");
@@ -115,7 +115,7 @@ int handle_client_connect(int player) {
                             cb_append(output_buffer, " has won! Game will be restarted. Load to continue or type 'exit' to quit");
                             server_broadcast(output_buffer);
                             game_init();
-                        }else{continue;}
+                        }
                     }else{
                         cb_append(output_buffer, " and it's a MISS\n");
                         server_broadcast(output_buffer);
